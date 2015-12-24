@@ -1,0 +1,10 @@
+{
+  "containers": [
+    {
+      "prettyName": "Rust 1.5",
+      "image": "schickling/rust",
+      "beforeScript": [],
+      "testCommand": "cargo test"
+    }
+  ]
+}
