@@ -83,7 +83,7 @@ impl Serializer for LineSerializer {
             _ => {}
         }
 
-        line.connect("")
+        line.join("")
     }
 }
 
@@ -138,7 +138,7 @@ mod tests {
         measurement.add_field("b", Value::Boolean(false));
 
         measurement.add_tag("tag", "value");
-        
+
         measurement.add_field("one, two", Value::String("three"));
         measurement.add_tag("one ,two", "three, four");
 
