@@ -1,4 +1,5 @@
 #[macro_use] extern crate log;
+extern crate rustc_serialize;
 
 pub mod client;
 pub mod hurl;
