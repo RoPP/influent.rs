@@ -1,7 +1,7 @@
 use ::measurement::Measurement;
 use ::serializer::Serializer;
 use ::client::{Precision, Client, Credentials, ClientError, ClientReadResult, ClientWriteResult};
-use ::hurl::{Hurl, Request, Response, Method, Auth};
+use ::hurl::{Hurl, Request, Method, Auth};
 use std::collections::HashMap;
 
 const MAX_BATCH: u16 = 5000;
@@ -15,7 +15,7 @@ pub enum WriteStatus {
 pub struct Options {
     pub max_batch: Option<u16>,
     pub precision: Option<Precision>,
-    
+
     pub epoch: Option<Precision>,
     pub chunk_size: Option<u16>
 }
@@ -117,7 +117,7 @@ impl<'a> Client for HttpClient<'a> {
                     password: self.credentials.password
                 }),
                 query: Some(query),
-                body: Some(lines.connect("\n"))
+                body: Some(lines.join("\n"))
             };
 
             match self.hurl.request(request) {
@@ -191,7 +191,7 @@ mod tests {
         }
     }
 
-    fn before<'a>(result: Box<Fn() -> HurlResult>) -> HttpClient<'a> {        
+    fn before<'a>(result: Box<Fn() -> HurlResult>) -> HttpClient<'a> {
         let credentials = Credentials {
             username: "gobwas",
             password: "1234",

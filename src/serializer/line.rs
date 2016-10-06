@@ -28,7 +28,7 @@ impl LineSerializer {
 }
 
 fn escape(s: &str) -> String {
-    s
+    s.to_owned()
         .replace(" ", "\\ ")
         .replace(",", "\\,")
 }
@@ -51,7 +51,7 @@ fn as_boolean(b: &bool) -> String {
 
 impl Serializer for LineSerializer {
     fn serialize(&self, measurement: &Measurement) -> String {
-        let mut line = vec![escape(measurement.key)];
+        let mut line = vec![escape(&measurement.key)];
 
         for (tag, value) in measurement.tags.iter() {
             line.push(",".to_string());
@@ -83,7 +83,7 @@ impl Serializer for LineSerializer {
             _ => {}
         }
 
-        line.connect("")
+        line.join("")
     }
 }
 
@@ -138,7 +138,7 @@ mod tests {
         measurement.add_field("b", Value::Boolean(false));
 
         measurement.add_tag("tag", "value");
-        
+
         measurement.add_field("one, two", Value::String("three"));
         measurement.add_tag("one ,two", "three, four");
 

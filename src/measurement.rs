@@ -1,10 +1,12 @@
+extern crate rustc_serialize;
 use std::collections::BTreeMap;
+use std::borrow::Cow;
 
-#[derive(Debug)]
+#[derive(Debug, RustcEncodable, RustcDecodable, Clone)]
 /// Measurement's field value.
-pub enum Value<'a> {
+pub enum Value {
     /// String.
-    String(&'a str),
+    String(String),
     /// Floating point number.
     Float(f64),
     /// Integer number.
@@ -14,26 +16,26 @@ pub enum Value<'a> {
 }
 
 /// Measurement model.
-#[derive(Debug)]
+#[derive(Debug, RustcEncodable, RustcDecodable, Clone)]
 pub struct Measurement<'a> {
     /// Key.
-    pub key: &'a str,
+    pub key: Cow<'a, str>,
 
     /// Timestamp.
     pub timestamp: Option<i32>,
 
     /// Map of fields.
-    pub fields: BTreeMap<&'a str, Value<'a>>,
-    
+    pub fields: BTreeMap<String, Value>,
+
     /// Map of tags.
-    pub tags: BTreeMap<&'a str, &'a str>
+    pub tags: BTreeMap<String, String>
 }
 
 impl<'a> Measurement<'a> {
     /// Constructs a new `Measurement`.
     ///
     /// # Examples
-    /// 
+    ///
     /// ```
     /// use influent::measurement::Measurement;
     ///
@@ -41,7 +43,7 @@ impl<'a> Measurement<'a> {
     /// ```
     pub fn new(key: &str) -> Measurement {
         Measurement {
-            key: key,
+            key: Cow::Borrowed(key),
             timestamp: None,
             fields: BTreeMap::new(),
             tags: BTreeMap::new()
@@ -59,8 +61,8 @@ impl<'a> Measurement<'a> {
     ///
     /// measurement.add_field("field", Value::String("hello"));
     /// ```
-    pub fn add_field(&mut self, field: &'a str, value: Value<'a>) {
-        self.fields.insert(field, value);
+    pub fn add_field(&mut self, field: &'a str, value: Value) {
+        self.fields.insert(field.to_owned(), value);
     }
 
     /// Adds tag to the measurement.
@@ -75,7 +77,7 @@ impl<'a> Measurement<'a> {
     /// measurement.add_tag("tag", "value");
     /// ```
     pub fn add_tag(&mut self, tag: &'a str, value: &'a str) {
-        self.tags.insert(tag, value);
+        self.tags.insert(tag.to_owned(), value.to_owned());
     }
 
     /// Sets the timestamp of the measurement.

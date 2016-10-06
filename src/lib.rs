@@ -1,14 +1,14 @@
 #[macro_use] extern crate log;
+extern crate rustc_serialize;
 
 pub mod client;
 pub mod hurl;
 pub mod serializer;
 pub mod measurement;
 
-use client::{Client, Credentials};
+use client::Credentials;
 use client::http::HttpClient;
 use hurl::hyper::HyperHurl;
-use serializer::Serializer;
 use serializer::line::LineSerializer;
 
 /// Simple factory of `HttpClient` with `LineSerializer`
